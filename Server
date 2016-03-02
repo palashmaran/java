@@ -1,0 +1,90 @@
+package server;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+ public class Server {
+	public static void main(String args[])
+	{
+		            
+	 
+          final ExecutorService service = Executors.newCachedThreadPool();   
+                ServerSocket ss=null;
+            try {
+                ss = new ServerSocket(5073);
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+                        
+                while(true)
+                {
+                    
+
+                    Socket S=null;
+                    try {
+                        S = ss.accept();
+                        Receiving R=new Receiving(S);
+                    
+                    service.submit(R);//establishes connection
+                  
+ 
+                    } catch (IOException ex) {
+                        Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+             }
+				
+        }
+     } 
+  
+ class Receiving implements Runnable 
+ {
+   private Socket S;
+   Receiving (Socket s)
+   {
+	   this.S=s;
+	  
+		// TODO Auto-generated catch block
+	
+   }
+	public void run() {
+               try {
+                   // TODO Auto-generated method stub
+                        String str="";
+                        DataInputStream din=new DataInputStream(this.S.getInputStream());
+
+                        str=din.readUTF();
+                        System.out.println("client says: "+str);
+
+                        
+                    }
+                    catch (IOException ex) {
+                         Logger.getLogger(Receiving.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+
+           }
+           
+    }
+                
+		
+	
+	 
+ 
+ class sending implements Runnable
+ {
+
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+	 
+ }
