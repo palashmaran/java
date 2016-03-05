@@ -34,10 +34,10 @@ import java.util.logging.Logger;
                     try {
                         S = ss.accept();
                         Receiving R=new Receiving(S);
-                    
-                    service.submit(R);//establishes connection
-                  
- 
+                        //Sending Sen=new Sending(S);         
+                        service.submit(R);//establishes connection
+                       // service.submit(Sen);
+
                     } catch (IOException ex) {
                         Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -59,12 +59,19 @@ import java.util.logging.Logger;
 	public void run() {
                try {
                    // TODO Auto-generated method stub
-                        String str="";
+                        String str="",str2="";
                         DataInputStream din=new DataInputStream(this.S.getInputStream());
+                        DataOutputStream dout=new DataOutputStream(this.S.getOutputStream());
+ 			BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
 
-                        str=din.readUTF();
-                        System.out.println("client says: "+str);
-
+                       while(true)
+                       { str=din.readUTF();
+                         System.out.println("client says: "+str);
+                        str2=br.readLine();
+                        if(!str2.isEmpty())
+                         dout.writeUTF(str2);
+                       
+                       }
                         
                     }
                     catch (IOException ex) {
@@ -79,12 +86,33 @@ import java.util.logging.Logger;
 	
 	 
  
- class sending implements Runnable
+ class Sending implements Runnable
  {
-
+    private Socket S;
+    public Sending(Socket s)
+    {
+        this.S=s;
+    }
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		try {
+                   // TODO Auto-generated method stub
+                        String str="";
+                        DataOutputStream dout=new DataOutputStream(this.S.getOutputStream());
+ 			BufferedReader br=new BufferedReader(new InputStreamReader(System.in));  
+
+                       while(true)
+                       { 
+                           dout.writeUTF(br.readLine());
+                        }
+                        
+                    }
+                    catch (IOException ex) {
+                         Logger.getLogger(Receiving.class.getName()).log(Level.SEVERE, null, ex);
+                      }
+
+           }
+           
 	}
 	 
- }
+ 
